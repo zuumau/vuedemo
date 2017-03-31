@@ -1,6 +1,6 @@
 # vuedemo
 
-> 慕课网
+> 慕课网 Vue2.0 Demo
 
 ## Build Setup
 
