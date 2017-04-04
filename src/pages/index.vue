@@ -140,6 +140,14 @@
           }
         }
       }
+    },
+    created: function () {
+      this.$http.get('api/getNewsList')
+        .then((res) => {
+          this.newsList = res.data
+        }, (err) => {
+          console.log(err)
+        })
     }
   }
 </script>

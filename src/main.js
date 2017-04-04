@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import router from './router'
 import Layout from './components/layout.vue'
+import VueResource from 'vue-resource'
+
+Vue.use(VueResource)
 
 Vue.config.productionTip = false
 
