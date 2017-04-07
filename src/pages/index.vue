@@ -27,6 +27,8 @@
 
     </div>
     <div class="index-right">
+
+      <slide-show :slides="slides" :inv="slideSpeed" @onchange="doSomethingOnSlideChange"></slide-show>
       <div class="index-board-list">
         <div class="index-board-item" v-for="(item, index) in boardList"
              :class="[{'line-last': index % 2 !== 0}, 'index-board-' + item.id]">
@@ -43,113 +45,146 @@
   </div>
 </template>
 
-<script>
-  export default{
-    data () {
-      return {
-        boardList: [
-          {
-            title: '开放产品',
-            description: '开放产品是一款开放产品',
-            id: 'car',
-            saleout: false
-          },
-          {
-            title: '品牌营销',
-            description: '品牌营销帮助你的产品更好的找到定位',
-            id: 'earth',
-            saleout: false
-          },
-          {
-            title: '使命必达',
-            description: '使命必答快速迭代永远保持最前端的速度',
-            id: 'loud',
-            saleout: false
-          },
-          {
-            title: '勇攀高峰',
-            description: '开放产品是一款开放产品',
-            id: 'hill',
-            saleout: false
-          }
-        ],
-        newsList: [
-          {
-            title: '数据统计',
-            url: 'http://starcraft.com'
-          },
-          {
-            title: '数据预测',
-            url: 'http://warcraft.com'
-          },
-          {
-            title: '流量分析',
-            url: 'http://overwatch.com',
-            hot: true
-          },
-          {
-            title: '广告发布',
-            url: 'http://hearstone.com'
-          }
-        ],
-        productList: {
-          pc: {
-            title: 'PC产品',
-            list: [
-              {
-                title: '数据统计',
-                url: 'http://starcraft.com'
-              },
-              {
-                title: '数据预测',
-                url: 'http://warcraft.com'
-              },
-              {
-                title: '流量分析',
-                url: 'http://overwatch.com',
-                hot: true
-              },
-              {
-                title: '广告发布',
-                url: 'http://hearstone.com'
-              }
-            ]
-          },
-          app: {
-            title: '手机应用类',
-            last: true,
-            list: [
-              {
-                title: '91助手',
-                url: 'http://weixin.com'
-              },
-              {
-                title: '产品助手',
-                url: 'http://twitter.com',
-                hot: true
-              },
-              {
-                title: '智能地图',
-                url: 'http://maps.com'
-              },
-              {
-                title: '团队语音',
-                url: 'http://phone.com'
-              }
-            ]
-          }
+<script type="text/ecmascript-6">
+import slideShow from '../components/slideShow'
+
+export default{
+  components: {
+    slideShow
+  },
+  methods: {
+    doSomethingOnSlideChange () {
+      console.log('doSomethingOnSlideChange')
+    }
+  },
+  data () {
+    return {
+      slideSpeed: 2000,
+      slides: [
+        {
+          src: require('../assets/slideShow/pic1.jpg'),
+          title: 'xxx1',
+          href: 'detail/analysis'
+        },
+        {
+          src: require('../assets/slideShow/pic2.jpg'),
+          title: 'xxx2',
+          href: 'detail/analysis'
+        },
+        {
+          src: require('../assets/slideShow/pic3.jpg'),
+          title: 'xxx3',
+          href: 'detail/analysis'
+        },
+        {
+          src: require('../assets/slideShow/pic4.jpg'),
+          title: 'xxx4',
+          href: 'detail/analysis'
+        }
+      ],
+      boardList: [
+        {
+          title: '开放产品',
+          description: '开放产品是一款开放产品',
+          id: 'car',
+          saleout: false
+        },
+        {
+          title: '品牌营销',
+          description: '品牌营销帮助你的产品更好的找到定位',
+          id: 'earth',
+          saleout: false
+        },
+        {
+          title: '使命必达',
+          description: '使命必答快速迭代永远保持最前端的速度',
+          id: 'loud',
+          saleout: false
+        },
+        {
+          title: '勇攀高峰',
+          description: '开放产品是一款开放产品',
+          id: 'hill',
+          saleout: false
+        }
+      ],
+      newsList: [
+        {
+          title: '数据统计',
+          url: 'http://starcraft.com'
+        },
+        {
+          title: '数据预测',
+          url: 'http://warcraft.com'
+        },
+        {
+          title: '流量分析',
+          url: 'http://overwatch.com',
+          hot: true
+        },
+        {
+          title: '广告发布',
+          url: 'http://hearstone.com'
+        }
+      ],
+      productList: {
+        pc: {
+          title: 'PC产品',
+          list: [
+            {
+              title: '数据统计',
+              url: 'http://starcraft.com'
+            },
+            {
+              title: '数据预测',
+              url: 'http://warcraft.com'
+            },
+            {
+              title: '流量分析',
+              url: 'http://overwatch.com',
+              hot: true
+            },
+            {
+              title: '广告发布',
+              url: 'http://hearstone.com'
+            }
+          ]
+        },
+        app: {
+          title: '手机应用类',
+          last: true,
+          list: [
+            {
+              title: '91助手',
+              url: 'http://weixin.com'
+            },
+            {
+              title: '产品助手',
+              url: 'http://twitter.com',
+              hot: true
+            },
+            {
+              title: '智能地图',
+              url: 'http://maps.com'
+            },
+            {
+              title: '团队语音',
+              url: 'http://phone.com'
+            }
+          ]
         }
       }
-    },
-    created: function () {
-      this.$http.get('api/getNewsList')
-        .then((res) => {
-          this.newsList = res.data
-        }, (err) => {
-          console.log(err)
-        })
     }
+  },
+  created: function () {
+    this.$http.get('api/getNewsList')
+      .then((res) => {
+        this.newsList = res.data
+      }, (err) => {
+        console.log(err)
+      })
   }
+}
 </script>
 
 <style scoped>
