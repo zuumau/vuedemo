@@ -54,7 +54,7 @@ export default{
   },
   methods: {
     doSomethingOnSlideChange () {
-      console.log('doSomethingOnSlideChange')
+      // console.log('doSomethingOnSlideChange')
     }
   },
   data () {
