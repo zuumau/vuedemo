@@ -244,7 +244,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import VChooser from '../../components/chooser'
+  import VChooser from '../../components/base/chooser'
   export default {
     components: {
       VChooser

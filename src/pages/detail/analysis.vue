@@ -110,10 +110,10 @@
 
 <script type="text/ecmascript-6">
   import _ from 'lodash'
-  import VSelection from '../../components/selection.vue'
-  import VCounter from '../../components/counter.vue'
-  import VChooser from '../../components/chooser.vue'
-  import VMulChooser from '../../components/multiplyChooser.vue'
+  import VSelection from '../../components/base/selection.vue'
+  import VCounter from '../../components/base/counter.vue'
+  import VChooser from '../../components/base/chooser.vue'
+  import VMulChooser from '../../components/base/multiplyChooser.vue'
   export default{
     components: {
       VSelection: VSelection,

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-  import Dialog from './dialog.vue'
+  import Dialog from './base/dialog.vue'
   import LogForm from './logForm.vue'
   export default{
     components: {
