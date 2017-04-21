@@ -62,7 +62,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   .counter-component {
     position: relative;
     display: inline-block;

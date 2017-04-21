@@ -10,7 +10,7 @@
           购买数量：
         </div>
         <div class="sales-board-line-right">
-          <v-counter :min="0" :max="99" @on-change="onParamChange('buyNum', $event)"></v-counter>
+          <v-counter :min="1" :max="99" @on-change="onParamChange('buyNum', $event)"></v-counter>
         </div>
       </div>
       <div class="sales-board-line">
@@ -86,13 +86,13 @@
           <th>总价</th>
         </tr>
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{ buyNum }}</td>
+          <td>{{ buyType.label }}</td>
+          <td>{{ period.label }}</td>
           <td>
-            <span v-for="item in versions"></span>
+            <span v-for="item in versions">{{ item.label }}</span>
           </td>
-          <td></td>
+          <td>{{ price }}</td>
         </tr>
       </table>
       <h3 class="buy-dialog-title">请选择银行</h3>
@@ -114,12 +114,18 @@
   import VCounter from '../../components/base/counter.vue'
   import VChooser from '../../components/base/chooser.vue'
   import VMulChooser from '../../components/base/multiplyChooser.vue'
+  import Dialog from '../../components/base/dialog.vue'
+  import BankChooser from '../../components/bankChooser.vue'
+  import CheckOrder from '../../components/checkOrder.vue'
   export default{
     components: {
-      VSelection: VSelection,
-      VCounter: VCounter,
-      VChooser: VChooser,
-      VMulChooser: VMulChooser
+      VSelection,
+      VCounter,
+      VChooser,
+      VMulChooser,
+      BankChooser,
+      CheckOrder,
+      MyDialog: Dialog
     },
     data () {
       return {
@@ -128,6 +134,12 @@
         versions: [],
         period: {},
         price: 0,
+        isShowPayDialog: false,
+        isShowErrDialog: false,
+        isShowCheckOrder: false,
+        isShowBuyDialog: false,
+        orderId: null,
+        bankId: null,
         buyTypes: [
           {
             label: '入门版',
@@ -175,7 +187,7 @@
     methods: {
       onParamChange (attr, val) {
         this[attr] = val
-        // console.log(attr, this[attr])
+        console.log(attr, this[attr])
         this.getPrice()
       },
       getPrice () {
@@ -194,13 +206,50 @@
             this.price = res.data.amount
           })
       },
-      showPayDialog () {}
+      showPayDialog () {
+        this.isShowPayDialog = true
+      },
+      hidePayDialog () {
+        this.isShowPayDialog = false
+      },
+      hideErrDialog () {
+        this.isShowErrDialog = false
+      },
+      onChangeBanks (bankObj) {
+        this.bankId = bankObj.id
+      },
+      hideCheckOrder () {
+        this.isShowCheckOrder = false
+      },
+      confirmBuy () {
+        let buyVersionsArray = _.map(this.versions, (item) => {
+          return item.value
+        })
+        let reqParams = {
+          buyNumber: this.buyNum,
+          buyType: this.buyType.value,
+          period: this.period.value,
+          version: buyVersionsArray.join(','),
+          bankId: this.bankId
+        }
+        this.$http.post('/api/createOrder', reqParams)
+          .then((res) => {
+            // let data = JSON.parse(res.data)
+            this.orderId = res.data.orderId
+            this.isShowCheckOrder = true
+            this.isShowPayDialog = false
+          }, (errMsg) => {
+            this.isShowBuyDialog = false
+            this.isShowErrDialog = true
+          })
+      }
     },
     mounted () {
-      this.buyNum = 0
+      this.buyNum = 1
       this.buyType = this.buyTypes[0]
-      this.versions = [this.versions[0]]
+      this.versions = [this.versionList[0]]
       this.period = this.periodList[0]
+      this.getPrice()
     }
   }
 </script>
