@@ -13,6 +13,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import { eventBus } from '../../eventBus'
   export default{
     props: {
       selections: {
@@ -29,13 +30,20 @@
         nowIndex: 0
       }
     },
+    mounted () {
+      eventBus.$on('reset-component', () => {
+        this.isDrop = false                        // 监听 layout中 reset事件 关闭选择器
+      })
+    },
     methods: {
-      toggleDrop () {
+      toggleDrop (event) {
+        event.stopPropagation()                    // 事件 停止冒泡
+        eventBus.$emit('reset-component')          // 打开 selection 后，关闭其它 selection
         this.isDrop = !this.isDrop
       },
       chooseSelection (index) {
         this.nowIndex = index
-        this.isDrop = false
+        // this.isDrop = false                     // 事件向上冒泡， 触发layout中 reset事件
         this.$emit('on-change', this.selections[this.nowIndex])
       }
     }

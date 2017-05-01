@@ -7,6 +7,11 @@
       </div>
 
       <div class="order-list-option">
+        选择产品2:
+        <v-selection :selections="products" @on-change="productChange"></v-selection>
+      </div>
+
+      <div class="order-list-option">
         开始日期:
         <v-date-picker @change="changeStartDate"></v-date-picker>
       </div>
@@ -36,7 +41,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import _ from 'lodash'
+  // import _ from 'lodash'
   import VSelection from '../components/base/selection.vue'
   import VDatePicker from '../components/base/datepicker'
   export default{
@@ -55,6 +60,7 @@
         productId: 0,
         startDate: '',
         endDate: '',
+        currentOrder: 'desc',
         tableHeads: [
           {
             label: '订单号',
@@ -85,7 +91,7 @@
             key: 'amount'
           }
         ],
-        tableData: [],
+        // tableData: [],  使用vuex 改为计算属性
         products: [
           {
             label: '数据统计',
@@ -106,19 +112,41 @@
         ]
       }
     },
+    computed: {
+      tableData () {
+        return this.$store.getters.getOrderList
+      }
+    },
     methods: {
       productChange (obj) {
-        this.productId = obj.value
-        this.getTableData()
+        this.$store.commit('updateParams', {      // 同步事件用 commit
+          key: 'productId',
+          val: obj.value
+        })
+        this.$store.dispatch('fetchOrderList')   // 异步事件用 dispatch
+        // this.productId = obj.value
+        // this.getTableData()
       },
       changeStartDate (date) {
-        this.startDate = date
-        this.getTableData()
+        this.$store.commit('updateParams', {
+          key: 'startDate',
+          val: date
+        })
+        this.$store.dispatch('fetchOrderList')
+        // this.startDate = date
+        // this.getTableData()
       },
       changeEndDate (date) {
-        this.endDate = date
-        this.getTableData()
+        this.$store.commit('updateParams', {
+          key: 'endDate',
+          val: date
+        })
+        this.$store.dispatch('fetchOrderList')
+        // this.endDate = date
+        // this.getTableData()
       },
+
+      // 使用vuex后，此方法已作废
       getTableData () {
         let reqParams = {
           query: this.query,
@@ -134,6 +162,7 @@
           })
       },
       changeOrderType (headItem) {
+        console.log(headItem)
         this.tableHeads.map((item) => {
           item.active = false
           return item
@@ -142,13 +171,15 @@
         if (this.currentOrder === 'asc') {
           this.currentOrder = 'desc'
         } else if (this.currentOrder === 'desc') {
-          this.currentOrder === 'asc'
+          this.currentOrder = 'asc'
         }
-        this.tableData = _.orderBy(this.tableData, headItem.key, this.currentOrder)
+        // this.tableData = _.orderBy(this.tableData, headItem.key, this.currentOrder)
       }
     },
     mounted () {
-      this.getTableData()
+      // this.getTableData()
+      this.$store.dispatch('fetchOrderList')
+      console.log(this.$store)
     }
   }
 </script>

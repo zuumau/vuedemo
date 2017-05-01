@@ -4,6 +4,7 @@ import Vue from 'vue'
 import router from './router'
 import Layout from './components/layout.vue'
 import VueResource from 'vue-resource'
+import store from './store'
 
 Vue.use(VueResource)
 
@@ -13,6 +14,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<Layout/>',
   components: { Layout }
 })
